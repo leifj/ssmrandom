@@ -1,0 +1,41 @@
+
+Testing
+-------
+
+On the entropy producer:
+# python mcsender.py
+
+On the entropy consumer(s):
+# python mcreceiver.py&
+# sudo rngd --rng-device=/var/run/mc-socket --rng-driver=stream -f
+
+The consumer must be able to read the FIFO but the rngd must probably
+run as root.
+
+The idiots entropy distribution protocol (IEDP):
+------------------------------------------------
+
+Messages are JSON objects with 3 keys:
+
+- s (source): identifies the source of the random data, eg the name of a hw device
+- p (producer): identifies the entity that sent the data
+- d (data): base64-encoded random data
+
+Example
+
+{'s': 'Quantrics PCIe','p':'random.sunet.se','d': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'}
+
+For security this can be signed.
+
+Security issues
+---------------
+
+Collecting and adding external data to your entropy pool is a tricky issue. Adding
+multicast to the mix makes it quite hard to analyze. This project is trying to 
+investigate the properties of a system for distributing entropy in an efficient and
+way. A couple of issues that are being investigated:
+
+- how much entropy do you have to consume in order to pick a random sample
+from the multicast feed?
+- how expensive would it be to validate signatures on each json mesage?
+- how good is rngtools at picking up bad entropy?
