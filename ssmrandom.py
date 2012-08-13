@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python
 __author__ = 'leifj'
 
 import socket
@@ -28,9 +28,11 @@ if sys.argv[1] == 'recv':
     opts.setdefault('-o',  RNGD_PIPE)
     opts.setdefault('-d',False)
     opts.setdefault('-g', SSM_GROUP)
-    if opts['-d']:
-        logger = logging.getLogger(__name__)
-        logger.setLevel(logging.DEBUG)
+    opts.setdefault('-L',"WARNING")
+    loglevel = getattr(logging, opts['-L'].upper(), None)
+    if not isinstance(loglevel, int):
+        raise ValueError('Invalid log level: %s' % loglevel)
+    logging.basicConfig(level=loglevel)
 
     imr = (socket.inet_pton(socket.AF_INET, opts['-g']) +
            socket.inet_pton(socket.AF_INET, opts['-i']) +
@@ -44,28 +46,31 @@ if sys.argv[1] == 'recv':
         os.mkfifo(RNGD_PIPE)
 
     with open(RNGD_PIPE,"w+") as fd:
-        print "starting up..."
+        logging.debug("Starting...")
         while True:
             try:
                 msg = json.loads(s.recv(4096))
                 data = base64.b64decode(msg['d'])
                 logging.debug(msg)
+                logging.info("Received %d bytes" % len(msg))
                 #print "%d bytes" % len(data)
                 fd.write(data)
             except Exception,ex:
-                logging.debug(ex)
+                logging.warning(ex)
                 pass
 
 elif sys.argv[1] == 'send':
-    opts, args = getopt.getopt(sys.argv[2:], 't:s:g:p:r:d')
+    opts, args = getopt.getopt(sys.argv[2:], 't:s:g:p:r:L:')
     opts = dict(opts)
     opts.setdefault('-p',SSM_PORT)
     opts.setdefault('-g',SSM_GROUP)
     opts.setdefault('-r',ENTROPY_DEVICE)
-    opts.setdefault('-d',False)
-    if opts['-d']:
-        logger = logging.getLogger(__name__)
-        logger.setLevel(logging.DEBUG)
+    opts.setdefault('-L',"WARNING")
+
+    loglevel = getattr(logging, opts['-L'].upper(), None)
+    if not isinstance(loglevel, int):
+        raise ValueError('Invalid log level: %s' % loglevel)
+    logging.basicConfig(level=loglevel)
 
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     if '-t' in opts:
@@ -75,11 +80,14 @@ elif sys.argv[1] == 'send':
     s.connect((opts['-g'], int(opts['-p'])))
     with open(opts['-r']) as fd:
         while True:
-            d = fd.read(1024)
-            e = base64.b64encode(d)
-        msg = {'s':'urandom','p':'test','d': e}
-        s.send(json.dumps(msg))
-        logging.debug(msg)
-        time.sleep(1)
+            try:
+                d = fd.read(1024)
+                e = base64.b64encode(d)
+                msg = {'s':opts['-r'],'p':'test','d': e}
+                s.send(json.dumps(msg))
+                logging.debug(msg)
+            except Exception,ex:
+                logging.warning(ex)
+                pass
 else:
     raise ValueError("send or recv...")
