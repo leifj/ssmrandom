@@ -53,8 +53,7 @@ if sys.argv[1] == 'recv':
                 msg = json.loads(s.recv(4096))
                 data = base64.b64decode(msg['d'])
                 logging.debug(msg)
-                logging.info("received %d bytes" % len(msg))
-                #print "%d bytes" % len(data)
+                logging.info("received %d bytes" % len(data))
                 fd.write(data)
                 z = random.randint(1,20)
                 logging.debug("sleeping %d seconds..." % z)
@@ -63,7 +62,7 @@ if sys.argv[1] == 'recv':
                 logging.warning(ex)
                 pass
 
-elif sys.argv[1] == 'send':
+elif sys.argv[1] == 'send' or sys.argv[1] == 'rawsend':
     opts, args = getopt.getopt(sys.argv[2:], 't:s:g:p:r:L:')
     opts = dict(opts)
     opts.setdefault('-p',SSM_PORT)
@@ -86,10 +85,14 @@ elif sys.argv[1] == 'send':
         while True:
             try:
                 d = fd.read(1024)
-                e = base64.b64encode(d)
-                msg = {'s':opts['-r'],'p':'test','d': e}
-                s.send(json.dumps(msg))
-                logging.debug(msg)
+                if sys.argv[1] == 'send':
+                   e = base64.b64encode(d)
+                   msg = {'s':opts['-r'],'p':'test','d': e}
+                   s.send(json.dumps(msg))
+                else:
+                   s.send(d)
+                logging.debug("sent %d bytes" % len(d))
+		#time.sleep(1)
             except Exception,ex:
                 logging.warning(ex)
                 pass
