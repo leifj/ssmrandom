@@ -34,7 +34,7 @@ def _setup_logging(opts):
     loglevel = getattr(logging, opts['-L'].upper(), None)
     if not isinstance(loglevel, int):
         raise ValueError('Invalid log level: %s' % loglevel)
-    handler = SysLogHandler(facility=SysLogHandler.LOG_AUTH)
+    handler = SysLogHandler(address='/dev/log',facility=SysLogHandler.LOG_DAEMON)
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
     handler.setFormatter(formatter)
     logging.root.addHandler(handler)
