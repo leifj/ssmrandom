@@ -34,12 +34,12 @@ def _setup_logging(opts):
     loglevel = getattr(logging, opts['-L'].upper(), None)
     if not isinstance(loglevel, int):
         raise ValueError('Invalid log level: %s' % loglevel)
-    logger = logging.getLogger(__name__)
     handler = SysLogHandler(facility=SysLogHandler.LOG_AUTH)
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
     handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    logger.setLevel(loglevel)
+    logging.root.addHandler(handler)
+    logging.basicConfig()
+    logging.root.setLevel(loglevel)
 
 if sys.argv[1] == 'recv':
     opts, args = getopt.getopt(sys.argv[2:], 'g:i:p:o:L:s:')
