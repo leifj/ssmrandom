@@ -38,7 +38,8 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        # -*- Requirements -*-
+        'daemon',
+        'lockfile'
     ],
     entry_points = {
         'console_scripts':
