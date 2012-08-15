@@ -79,6 +79,11 @@ def main():
     opts = {}
     args = []
     flags = None
+
+    if len(sys.argv) < 2:
+        usage()
+        sys.exit(2)
+
     if sys.argv[1] in ('recv'):
         flags = 'h:L:vg:i:p:o:s:'
     elif sys.argv[1] in ('send','rawsend'):
@@ -178,3 +183,5 @@ def main():
                     logging.warning(ex)
                     pass
 
+if __name__ == '__main__':
+    main()
