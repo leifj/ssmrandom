@@ -35,7 +35,10 @@ def _setup_logging(opts):
     if not isinstance(loglevel, int):
         raise ValueError('Invalid log level: %s' % loglevel)
     logger = logging.getLogger(__name__)
-    logger.addHandler(SysLogHandler(facility=SysLogHandler.LOG_AUTH))
+    handler = SysLogHandler(facility=SysLogHandler.LOG_AUTH)
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler()
     logger.setLevel(loglevel)
 
 if sys.argv[1] == 'recv':
@@ -98,7 +101,7 @@ elif sys.argv[1] == 'send' or sys.argv[1] == 'rawsend':
     s.connect((opts['-g'], int(opts['-p'])))
     bufsz = int(opts['-s'])
     with open(opts['-r']) as fd:
-        logging.debug("entropy SSM transmitter v%s starting..." % VERSION)
+        logging.info("entropy SSM transmitter v%s starting..." % VERSION)
         while True:
             try:
                 d = fd.read(bufsz)
