@@ -22,16 +22,12 @@ Quick Start
 
 On the entropy producer (using the default multicast group and port):
 
-``
-# ssmrandom send -r /dev/urandom -t 32 -g 232.0.1.100 -p 49999 -L info 
-``
+    # ssmrandom send -r /dev/urandom -t 32 -g 232.0.1.100 -p 49999 -L info 
 
 On the entropy consumer(s):
 
-``
-# ssmrandom recv -o /var/run/rnd-pipe -g 232.0.1.100 -p 49999 <ip-of-producer>
-# rngd --rng-device=/var/run/rnd-pipe --rng-driver=stream --fill-watermark=90% --feed-interval=1
-``
+    # ssmrandom recv -o /var/run/rnd-pipe -g 232.0.1.100 -p 49999 <ip-of-producer>
+    # rngd --rng-device=/var/run/rnd-pipe --rng-driver=stream --fill-watermark=90% --feed-interval=1
 
 
 The idiots entropy distribution protocol (IEDP):
@@ -45,9 +41,7 @@ Messages are JSON objects with 3 keys:
 
 Example
 
-``
-{'s': '/dev/qrandom0','v':'1.0','d': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'}
-``
+    {'s': '/dev/qrandom0','v':'1.0','d': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'}
 
 For security this can be signed, which is the reason for having framing at all.
 
