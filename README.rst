@@ -27,6 +27,7 @@ On the entropy producer (using the default multicast group and port):
 On the entropy consumer(s):
 
     # ssmrandom recv -o /var/run/rnd-pipe -g 232.0.1.100 -p 49999 <ip-of-producer>
+
     # rngd --rng-device=/var/run/rnd-pipe --rng-driver=stream --fill-watermark=90% --feed-interval=1
 
 
