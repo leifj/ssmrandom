@@ -165,7 +165,7 @@ def main():
             s.setsockopt(socket.SOL_IP, socket.IP_MULTICAST_TTL, chr(int(opts['-t'])))
         if '-i' in opts:
             s.bind((opts['-i'], 0))
-        s.connect(group,port)
+        s.connect((group,port))
         bufsz = int(opts['-s'])
         with open(src) as fd:
             logging.info("entropy SSM transmitter v%s starting..." % VERSION)
