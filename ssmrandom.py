@@ -52,13 +52,17 @@ if sys.argv[1] == 'recv':
     opts.setdefault('-s',BUFSZ)
     _setup_logging(opts)
 
+    group = opts['-g']
+    port = int(opts['-p'])
+    host = args[0]
+
     imr = (socket.inet_pton(socket.AF_INET, opts['-g']) +
            socket.inet_pton(socket.AF_INET, opts['-i']) +
-           socket.inet_pton(socket.AF_INET, args[0]))
+           socket.inet_pton(socket.AF_INET, host))
 
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     s.setsockopt(socket.SOL_IP, socket.IP_ADD_SOURCE_MEMBERSHIP, imr)
-    s.bind((opts['-g'], int(opts['-p'])))
+    s.bind(group,port)
 
     if not os.path.exists(opts['-o']):
         os.mkfifo(opts['-o'])
@@ -71,14 +75,14 @@ if sys.argv[1] == 'recv':
                 msg = json.loads(s.recv(bufsz))
                 data = base64.b64decode(msg['d'])
                 logging.debug(msg)
-                logging.info("sending %d bytes of entropy upstream" % len(data))
+                logging.info("sending %d bytes of entropy from SSM:%s@%s:%d upstream" % (len(data),host,group,port))
                 fd.write(data)
             except Exception,ex:
                 logging.warning(ex)
                 pass
             finally:
                 z = random.randint(1,20)
-                logging.debug("sleeping %d seconds..." % z)
+                logging.debug("sleeping for %d seconds..." % z)
                 time.sleep(z)
 
 elif sys.argv[1] == 'send' or sys.argv[1] == 'rawsend':
@@ -93,12 +97,15 @@ elif sys.argv[1] == 'send' or sys.argv[1] == 'rawsend':
 
     _setup_logging(opts)
 
+    group = opts['-g']
+    port = int(opts['-p'])
+
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     if '-t' in opts:
         s.setsockopt(socket.SOL_IP, socket.IP_MULTICAST_TTL, chr(int(opts['-t'])))
     if '-s' in opts:
         s.bind((opts['-s'], 0))
-    s.connect((opts['-g'], int(opts['-p'])))
+    s.connect(group,port)
     bufsz = int(opts['-s'])
     with open(opts['-r']) as fd:
         logging.info("entropy SSM transmitter v%s starting..." % VERSION)
@@ -111,7 +118,7 @@ elif sys.argv[1] == 'send' or sys.argv[1] == 'rawsend':
                    s.send(json.dumps(msg))
                 else: # rawsend
                    s.send(d)
-                logging.debug("sent %d bytes" % len(d))
+                logging.debug("sending %d bytes of entropy to SSM:@%s:%d" % (len(d),group,port))
             except Exception,ex:
                 logging.warning(ex)
                 pass
