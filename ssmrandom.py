@@ -62,7 +62,7 @@ if sys.argv[1] == 'recv':
 
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     s.setsockopt(socket.SOL_IP, socket.IP_ADD_SOURCE_MEMBERSHIP, imr)
-    s.bind(group,port)
+    s.bind((group,port))
 
     if not os.path.exists(opts['-o']):
         os.mkfifo(opts['-o'])
