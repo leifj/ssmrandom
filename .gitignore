@@ -1,3 +1,7 @@
 .idea
 *.pyc
 *.egg-info
+*.egg
+*.tar.gz
+*.tgz
+*.zip
