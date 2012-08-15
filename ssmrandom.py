@@ -36,7 +36,7 @@ def _setup_logging(opts):
         raise ValueError('Invalid log level: %s' % loglevel)
     handler = SysLogHandler(address='/dev/log',facility=SysLogHandler.LOG_DAEMON)
     pid = os.getpid()
-    formatter = logging.Formatter('ssmrandom[%d] %(message)s' % pid)
+    formatter = logging.Formatter('ssmrandom[%d] \%(message)s' % pid)
     handler.setFormatter(formatter)
     logging.root.addHandler(handler)
     logging.root.setLevel(loglevel)
