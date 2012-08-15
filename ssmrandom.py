@@ -38,7 +38,6 @@ def _setup_logging(opts):
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
     handler.setFormatter(formatter)
     logging.root.addHandler(handler)
-    logging.basicConfig()
     logging.root.setLevel(loglevel)
 
 if sys.argv[1] == 'recv':
