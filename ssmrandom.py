@@ -35,7 +35,8 @@ def _setup_logging(opts):
     if not isinstance(loglevel, int):
         raise ValueError('Invalid log level: %s' % loglevel)
     handler = SysLogHandler(address='/dev/log',facility=SysLogHandler.LOG_DAEMON)
-    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    pid = os.getpid()
+    formatter = logging.Formatter('ssmrandom[%d] %(message)s' % pid)
     handler.setFormatter(formatter)
     logging.root.addHandler(handler)
     logging.root.setLevel(loglevel)
@@ -70,7 +71,7 @@ if sys.argv[1] == 'recv':
                 msg = json.loads(s.recv(bufsz))
                 data = base64.b64decode(msg['d'])
                 logging.debug(msg)
-                logging.info("received %d bytes" % len(data))
+                logging.info("sending %d bytes of entropy upstream" % len(data))
                 fd.write(data)
             except Exception,ex:
                 logging.warning(ex)
