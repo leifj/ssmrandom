@@ -8,13 +8,14 @@ import os
 
 from setuptools import setup
 
+here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
 NEWS = open(os.path.join(here, 'NEWS.txt')).read()
 
 
 PROJECT = u'ssmrandom'
 VERSION = '0.2'
-URL = ''
+URL = 'http://blogs.mnt.se'
 AUTHOR = u'Leif Johansson'
 AUTHOR_EMAIL = u'leifj@sunet.se'
 DESC = "Entropy distribution using SSM (source-specific multicast)"
@@ -30,7 +31,7 @@ setup(
     name=PROJECT,
     version=VERSION,
     description=DESC,
-    long_description=README + '\n\n' + NEWS
+    long_description=README + '\n\n' + NEWS,
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
     url=URL,
