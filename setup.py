@@ -10,7 +10,7 @@ from setuptools import setup
 
 
 PROJECT = u'SSM Random'
-VERSION = '0.1'
+VERSION = '0.2'
 URL = ''
 AUTHOR = u'Leif Johansson'
 AUTHOR_EMAIL = u'leifj@sunet.se'
