@@ -37,7 +37,7 @@ setup(
     url=URL,
     license='BSD',
     namespace_packages=[],
-    packages=[u'ssmrandom'],
+    packages=['ssmrandom'],
     package_dir = {'': os.path.dirname(__file__)},
     include_package_data=True,
     zip_safe=False,
