@@ -1,0 +1,9 @@
+News
+====
+
+0.2
+-----
+
+*Release date: Thu Aug 16 11:02:35 CEST 2012*
+
+* First public release

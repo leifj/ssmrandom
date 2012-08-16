@@ -8,8 +8,11 @@ import os
 
 from setuptools import setup
 
+README = open(os.path.join(here, 'README.rst')).read()
+NEWS = open(os.path.join(here, 'NEWS.txt')).read()
 
-PROJECT = u'SSM Random'
+
+PROJECT = u'ssmrandom'
 VERSION = '0.2'
 URL = ''
 AUTHOR = u'Leif Johansson'
@@ -27,11 +30,11 @@ setup(
     name=PROJECT,
     version=VERSION,
     description=DESC,
-    long_description=read_file('README.rst'),
+    long_description=long_description=README.rst + '\n\n' + NEWS
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
     url=URL,
-    license=read_file('LICENSE'),
+    license='BSD',
     namespace_packages=[],
     packages=[u'ssmrandom'],
     package_dir = {'': os.path.dirname(__file__)},
