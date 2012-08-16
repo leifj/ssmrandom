@@ -32,6 +32,7 @@ BUGS: only ipv4 is supported
 NOTE that you may need to enable igmpv3 on your network for SSM to work.
 """
 from logging import StreamHandler
+from ssmrandom.pidfile import PidFile
 
 __author__ = 'leifj'
 
@@ -197,6 +198,7 @@ def _main():
 
         if not '-f' in opts:
             context = daemon.DaemonContext(working_directory='/tmp',files_preserve=[s])
+            context.pidfile = PidFile('/var/run/ssmrandom.pid')
             with context as ctx:
                 _receiver(s,group,host,port,int(opts['-s']),dst,opts['-L'],False)
         else:
@@ -215,6 +217,7 @@ def _main():
 
         if not '-f' in opts:
             context = daemon.DaemonContext(working_directory='/tmp',files_preserve=[s])
+            context.pidfile = PidFile('/var/run/ssmrandom.pid')
             with context as ctx:
                 _sender(s,group,port,int(opts['-s']),opts['-r'],opts['-L'],False)
         else:
