@@ -1,0 +1,17 @@
+Source: ssmrandom
+Maintainer: Leif Johansson <leifj@sunet.se>
+Section: python
+Priority: optional
+Build-Depends: python-setuptools (>= 0.6b3), debhelper (>= 7), python-support (>= 0.8.4)
+Standards-Version: 3.8.4
+XS-Python-Version: current
+
+Package: python-ssmrandom
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}, python-daemon, python-lockfile
+XB-Python-Version: ${python:Versions}
+Provides: ${python:Provides}
+Description: Entropy distribution using SSM (source-specific multicast)
+ This is an experiment with using source specific multicast to distribute 
+ high-quality entropy to consumers. The package contains a single script which 
+ can act as both a sender and receiver.
