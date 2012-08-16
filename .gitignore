@@ -10,3 +10,5 @@ dist
 *.log
 *.debhelper
 debian/python-ssmrandom
+debian/files
+debian/python-ssmrandom.substvars
