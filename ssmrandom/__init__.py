@@ -173,10 +173,6 @@ def _main():
     opts.setdefault('-L',LOGLEVEL)
     opts.setdefault('-t',MCTTL)
 
-    context = None
-    if not '-f' in opts:
-        context = daemon.DaemonContext(working_directory='/tmp',files_preserve=[])
-
     if sys.argv[1] == 'recv':
         group = opts['-g']
         port = int(opts['-p'])
@@ -199,7 +195,8 @@ def _main():
         if not os.path.exists(dst):
             os.mkfifo(dst)
 
-        if context is not None:
+        if not '-f' in opts:
+            context = daemon.DaemonContext(working_directory='/tmp',files_preserve=[s])
             with context as ctx:
                 _receiver(s,group,host,port,int(opts['-s']),dst,opts['-L'],False)
         else:
@@ -216,7 +213,8 @@ def _main():
             s.bind((opts['-i'], 0))
         s.connect((group,port))
 
-        if context is not None:
+        if not '-f' in opts:
+            context = daemon.DaemonContext(working_directory='/tmp',files_preserve=[s])
             with context as ctx:
                 _sender(s,group,port,int(opts['-s']),opts['-r'],opts['-L'],False)
         else:
