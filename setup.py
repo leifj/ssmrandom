@@ -30,7 +30,7 @@ setup(
     name=PROJECT,
     version=VERSION,
     description=DESC,
-    long_description=long_description=README.rst + '\n\n' + NEWS
+    long_description=long_description=README + '\n\n' + NEWS
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
     url=URL,
