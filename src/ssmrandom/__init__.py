@@ -214,7 +214,7 @@ def _main():
         s.connect((group,port))
 
         if not '-f' in opts:
-            context = daemon.DaemonContext(working_directory='/tmp',files_preserve=[s])
+            context = daemon.DaemonContext(working_directory='/tmp',files_preserve=[s])lll
             with context as ctx:
                 _sender(s,group,port,int(opts['-s']),opts['-r'],opts['-L'],False)
         else:

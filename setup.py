@@ -1,12 +1,7 @@
 #!/usr/bin/env python
 
-# Bootstrap installation of Distribute
-import distribute_setup
-distribute_setup.use_setuptools()
-
-import os
-
-from setuptools import setup
+from setuptools import setup, find_packages
+import sys, os
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
@@ -37,7 +32,7 @@ setup(
     url=URL,
     license='BSD',
     namespace_packages=[],
-    packages=['ssmrandom'],
+    packages=find_packages('src'),
     package_dir = {'': os.path.dirname(__file__)},
     include_package_data=True,
     zip_safe=False,
