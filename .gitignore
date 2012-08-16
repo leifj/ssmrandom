@@ -7,3 +7,6 @@
 *.zip
 build
 dist
+*.log
+*.debhelper
+debian/python-ssmrandom
