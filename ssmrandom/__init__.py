@@ -66,12 +66,11 @@ LOGLEVEL = "WARNING"
 MCTTL = "32"
 PIDFILE = '/var/run/ssmrandom.pid'
 
-def _setup_logging(opts):
-    loglevel = getattr(logging, opts['-L'].upper(), None)
+def _setup_logging(level,foreground=False):
+    loglevel = getattr(logging, level.upper(), None)
     if not isinstance(loglevel, int):
         raise ValueError('Invalid log level: %s' % loglevel)
-    logging.basicConfig()
-    if '-f' in opts:
+    if foreground:
         handler = StreamHandler()
     else:
         handler = SysLogHandler(address='/dev/log',facility=SysLogHandler.LOG_DAEMON)
@@ -84,11 +83,13 @@ def _setup_logging(opts):
 def usage():
     print __doc__
 
-def _sender(s,group,port,bufsz,src):
+def _sender(s,group,port,bufsz,src,level,foreground):
+    _setup_logging(level,foreground)
     with open(src) as fd:
         logging.info("entropy SSM transmitter v%s starting..." % VERSION)
         while True:
             try:
+                logging.debug("about to read from %s" % src)
                 d = fd.read(bufsz)
                 if sys.argv[1] == 'send':
                     e = base64.b64encode(d)
@@ -104,7 +105,8 @@ def _sender(s,group,port,bufsz,src):
                 pass
 
 
-def _receiver(s,group, host, port,bufsz,dst):
+def _receiver(s,group, host, port,bufsz,dst,level,foreground):
+    _setup_logging(level,foreground)
     with open(dst, "w+") as fd:
         logging.info("entropy SSM receiver v%s starting..." % VERSION)
         while True:
@@ -164,14 +166,6 @@ def _main():
         print "ssmrandom version %s (c) NORDUnet A/S 2012" % VERSION
         sys.exit()
 
-    context = None
-    if not '-f' in opts:
-        with open(PIDFILE,'w') as fd:
-            fd.write("%d\n" % os.getpid())
-        context = daemon.DaemonContext(working_directory='/tmp',
-                    umask=0o002,
-                    pidfile=lockfile.FileLock(PIDFILE))
-
     opts.setdefault('-i','0.0.0.0')
     opts.setdefault('-p',SSM_PORT)
     opts.setdefault('-o',RNGD_PIPE)
@@ -181,8 +175,9 @@ def _main():
     opts.setdefault('-L',LOGLEVEL)
     opts.setdefault('-t',MCTTL)
 
-    _setup_logging(opts)
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+    context = None
+    if not '-f' in opts:
+        context = daemon.DaemonContext(working_directory='/tmp',files_preserve=[])
 
     if sys.argv[1] == 'recv':
         group = opts['-g']
@@ -199,6 +194,7 @@ def _main():
                socket.inet_pton(socket.AF_INET, opts['-i']) +
                socket.inet_pton(socket.AF_INET, host))
 
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         s.setsockopt(socket.SOL_IP, socket.IP_ADD_SOURCE_MEMBERSHIP, imr)
         s.bind((group,port))
 
@@ -206,16 +202,16 @@ def _main():
             os.mkfifo(dst)
 
         if context is not None:
-            with context:
-                _receiver(s,group,host,port,int(opts['-s']), dst)
+            with context as ctx:
+                _receiver(s,group,host,port,int(opts['-s']),dst,opts['-L'],'-f' in opts)
         else:
-            _receiver(s,group,host,port,int(opts['-s']), dst)
+            _receiver(s,group,host,port,int(opts['-s']),dst,opts['-L'],'-f' in opts)
 
     elif sys.argv[1] == 'send' or sys.argv[1] == 'rawsend':
         opts.setdefault('-s',MSGSZ)
         group = opts['-g']
         port = int(opts['-p'])
-
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         if '-t' in opts:
             s.setsockopt(socket.SOL_IP, socket.IP_MULTICAST_TTL, chr(int(opts['-t'])))
         if '-i' in opts:
@@ -223,10 +219,10 @@ def _main():
         s.connect((group,port))
 
         if context is not None:
-            with context:
-                _sender(s,group,port,int(opts['-s']),opts['-r'])
+            with context as ctx:
+                _sender(s,group,port,int(opts['-s']),opts['-r'],opts['-L'],'-f' in opts)
         else:
-            _sender(s,group,port,int(opts['-s']),opts['-r'])
+            _sender(s,group,port,int(opts['-s']),opts['-r'],opts['-L'],'-f' in opts)
 
 if __name__ == '__main__':
     main()

@@ -38,7 +38,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'daemon',
+        'python-daemon',
         'lockfile'
     ],
     entry_points = {
