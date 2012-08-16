@@ -1,0 +1,11 @@
+*.pyc
+*.tar.gz
+*.tgz
+*.zip
+build
+dist
+*.log
+*.debhelper
+python-ssmrandom
+*.substvars
+files
