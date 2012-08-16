@@ -10,7 +10,7 @@ NEWS = open(os.path.join(here, 'NEWS.txt')).read()
 
 PROJECT = u'ssmrandom'
 VERSION = '0.2'
-URL = 'https://github.com/leifj/mcrandom'
+URL = 'https://github.com/leifj/ssmrandom'
 AUTHOR = u'Leif Johansson'
 AUTHOR_EMAIL = u'leifj@sunet.se'
 DESC = "Entropy distribution using SSM (source-specific multicast)"
