@@ -104,7 +104,6 @@ def _sender(s,group,port,bufsz,src,level,foreground):
                 logging.warning(ex)
                 pass
 
-
 def _receiver(s,group, host, port,bufsz,dst,level,foreground):
     _setup_logging(level,foreground)
     with open(dst, "w+") as fd:
@@ -125,7 +124,6 @@ def _receiver(s,group, host, port,bufsz,dst,level,foreground):
                 logging.warning(ex)
                 time.sleep(1)
                 pass
-
 
 def main():
     try:
@@ -203,9 +201,9 @@ def _main():
 
         if context is not None:
             with context as ctx:
-                _receiver(s,group,host,port,int(opts['-s']),dst,opts['-L'],'-f' in opts)
+                _receiver(s,group,host,port,int(opts['-s']),dst,opts['-L'],False)
         else:
-            _receiver(s,group,host,port,int(opts['-s']),dst,opts['-L'],'-f' in opts)
+            _receiver(s,group,host,port,int(opts['-s']),dst,opts['-L'],True)
 
     elif sys.argv[1] == 'send' or sys.argv[1] == 'rawsend':
         opts.setdefault('-s',MSGSZ)
@@ -220,9 +218,9 @@ def _main():
 
         if context is not None:
             with context as ctx:
-                _sender(s,group,port,int(opts['-s']),opts['-r'],opts['-L'],'-f' in opts)
+                _sender(s,group,port,int(opts['-s']),opts['-r'],opts['-L'],False)
         else:
-            _sender(s,group,port,int(opts['-s']),opts['-r'],opts['-L'],'-f' in opts)
+            _sender(s,group,port,int(opts['-s']),opts['-r'],opts['-L'],True)
 
 if __name__ == '__main__':
     main()
