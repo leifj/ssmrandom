@@ -1,5 +1,4 @@
 include MANIFEST.in
 include README.rst
 include NEWS.txt
-include distribute_setup.py
 include setup.py

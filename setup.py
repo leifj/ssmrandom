@@ -33,7 +33,7 @@ setup(
     license='BSD',
     namespace_packages=[],
     packages=find_packages('src'),
-    package_dir = {'': os.path.dirname(__file__)},
+    package_dir = {'': 'src'},
     include_package_data=True,
     zip_safe=False,
     install_requires=[
