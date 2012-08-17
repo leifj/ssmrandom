@@ -1,5 +1,15 @@
+ssmrandom (0.2-1ubuntu2) precise; urgency=low
+
+  * renamed git repo
+  * working pidfile
+  * upstart
+  * explicitly set pidfile 
+  * stay attached but act as daemon (-F)
+
+ -- Leif Johansson <leifj@sunet.se>  Fri, 17 Aug 2012 12:56:50 +0200
+
 ssmrandom (0.2-1ubuntu1) precise; urgency=low
 
   * initial debian packaging
- -- Leif Johansson <leifj@klapautius.mnt.se>  Thu, 16 Aug 2012 13:08:36 +0200
+ -- Leif Johansson <leifj@sunet.se>  Thu, 16 Aug 2012 13:08:36 +0200
 
