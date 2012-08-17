@@ -1,3 +1,11 @@
+ssmrandom (0.3-1ubuntu1) precise; urgency=low
+
+  * support multiple senders on same group and port
+  * cut version 0.3
+  * news entry
+
+ -- Leif Johansson <leifj@sunet.se>  Fri, 17 Aug 2012 15:31:18 +0200
+
 ssmrandom (0.2-1ubuntu2) precise; urgency=low
 
   * renamed git repo
