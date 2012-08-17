@@ -9,7 +9,7 @@ NEWS = open(os.path.join(here, 'NEWS.txt')).read()
 
 
 PROJECT = u'ssmrandom'
-VERSION = '0.2'
+VERSION = '0.3'
 URL = 'https://github.com/leifj/ssmrandom'
 AUTHOR = u'Leif Johansson'
 AUTHOR_EMAIL = u'leifj@sunet.se'
