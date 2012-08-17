@@ -8,6 +8,8 @@ Usage: ssmrandom {recv|send|rawsend} [options]+ [host IP(only for recv)]
         -i local bind address
         -p port
         -f stay in the foreground (and log to stderr)
+        -F do not detatch (but otherwize act as a daemon) - useful for init
+        -P <pidfile>
 
         recv options:
         -s buffer size
@@ -142,9 +144,9 @@ def _main():
         sys.exit(2)
 
     if sys.argv[1] in ('recv'):
-        flags = 'fh:L:vg:i:p:o:s:'
+        flags = 'vfFhL:P:g:s:i:p:o:'
     elif sys.argv[1] in ('send','rawsend'):
-        flags = 'fh:L:vt:s:g:p:r:s:'
+        flags = 'vfFhL:P:g:s:t:p:r:'
     else:
         usage()
         sys.exit()
@@ -173,6 +175,12 @@ def _main():
     opts.setdefault('-r',ENTROPY_DEVICE)
     opts.setdefault('-L',LOGLEVEL)
     opts.setdefault('-t',MCTTL)
+    opts.setdefault('-P',PIDFILE)
+
+    context = None
+    if not '-f' in opts:
+        context = daemon.DaemonContext(working_directory='/tmp')
+        context.pidfile = PidFile(opts['-P'])
 
     if sys.argv[1] == 'recv':
         group = opts['-g']
@@ -196,9 +204,10 @@ def _main():
         if not os.path.exists(dst):
             os.mkfifo(dst)
 
-        if not '-f' in opts:
-            context = daemon.DaemonContext(working_directory='/tmp',files_preserve=[s])
-            context.pidfile = PidFile('/var/run/ssmrandom.pid')
+        if context is not None:
+            context.files_preserve=[s]
+            if '-F' in opts:
+                context.detach_process = False
             with context as ctx:
                 _receiver(s,group,host,port,int(opts['-s']),dst,opts['-L'],False)
         else:
@@ -215,9 +224,10 @@ def _main():
             s.bind((opts['-i'], 0))
         s.connect((group,port))
 
-        if not '-f' in opts:
-            context = daemon.DaemonContext(working_directory='/tmp',files_preserve=[s])
-            context.pidfile = PidFile('/var/run/ssmrandom.pid')
+        if context is not None:
+            context.files_preserve=[s]
+            if '-F' in opts:
+                context.detach_process = False
             with context as ctx:
                 _sender(s,group,port,int(opts['-s']),opts['-r'],opts['-L'],False)
         else:
