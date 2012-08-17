@@ -86,7 +86,7 @@ def _setup_logging(level,foreground=False):
 def usage():
     print __doc__
 
-def _sender(s,group,port,bufsz,src,level,foreground):
+def _sender(s,group,bufsz,src,level,foreground):
     _setup_logging(level,foreground)
     with open(src) as fd:
         logging.info("entropy SSM transmitter v%s starting..." % VERSION)
@@ -100,14 +100,14 @@ def _sender(s,group,port,bufsz,src,level,foreground):
                     s.send(json.dumps(msg))
                 else: # rawsend
                     s.send(d)
-                logging.debug("sending %d bytes of entropy to SSM:@%s:%d" % (len(d), group, port))
+                logging.debug("sending %d bytes of entropy to SSM:@%s" % (len(d), group))
             except KeyboardInterrupt,ex:
                 raise ex
             except Exception, ex:
                 logging.warning(ex)
                 pass
 
-def _receiver(s,group, host, port,bufsz,dst,level,foreground):
+def _receiver(s,group,bufsz,dst,level,foreground):
     _setup_logging(level,foreground)
     with open(dst, "w+") as fd:
         logging.info("entropy SSM receiver v%s starting..." % VERSION)
@@ -116,7 +116,7 @@ def _receiver(s,group, host, port,bufsz,dst,level,foreground):
                 msg = json.loads(s.recv(bufsz))
                 data = base64.b64decode(msg['d'])
                 logging.debug(msg)
-                logging.info("sending %d bytes of entropy from SSM:%s@%s:%d upstream" % (len(data), host, group, port))
+                logging.info("sending %d bytes of entropy from SSM:@%s upstream" % (len(data), group))
                 fd.write(data)
                 z = random.randint(1, 20)
                 logging.debug("sleeping for %d seconds..." % z)
@@ -190,15 +190,15 @@ def _main():
             usage()
             sys.exit(2)
 
-        host = args[0]
         dst = opts['-o']
 
-        imr = (socket.inet_pton(socket.AF_INET, group) +
-               socket.inet_pton(socket.AF_INET, opts['-i']) +
-               socket.inet_pton(socket.AF_INET, host))
-
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-        s.setsockopt(socket.SOL_IP, socket.IP_ADD_SOURCE_MEMBERSHIP, imr)
+        for host in args:
+            imr = (socket.inet_pton(socket.AF_INET, group) +
+                   socket.inet_pton(socket.AF_INET, opts['-i']) +
+                   socket.inet_pton(socket.AF_INET, host))
+
+            s.setsockopt(socket.SOL_IP, socket.IP_ADD_SOURCE_MEMBERSHIP, imr)
         s.bind((group,port))
 
         if not os.path.exists(dst):
@@ -209,9 +209,9 @@ def _main():
             if '-F' in opts:
                 context.detach_process = False
             with context as ctx:
-                _receiver(s,group,host,port,int(opts['-s']),dst,opts['-L'],False)
+                _receiver(s,group,int(opts['-s']),dst,opts['-L'],False)
         else:
-            _receiver(s,group,host,port,int(opts['-s']),dst,opts['-L'],True)
+            _receiver(s,group,int(opts['-s']),dst,opts['-L'],True)
 
     elif sys.argv[1] == 'send' or sys.argv[1] == 'rawsend':
         opts.setdefault('-s',MSGSZ)
@@ -229,9 +229,9 @@ def _main():
             if '-F' in opts:
                 context.detach_process = False
             with context as ctx:
-                _sender(s,group,port,int(opts['-s']),opts['-r'],opts['-L'],False)
+                _sender(s,group,int(opts['-s']),opts['-r'],opts['-L'],False)
         else:
-            _sender(s,group,port,int(opts['-s']),opts['-r'],opts['-L'],True)
+            _sender(s,group,int(opts['-s']),opts['-r'],opts['-L'],True)
 
 if __name__ == '__main__':
     main()
