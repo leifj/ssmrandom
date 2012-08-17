@@ -1,0 +1,22 @@
+# ssmrandom - receive and send entropy using SSM
+#
+# The ssmrandom is a background task that keeps sending or receiving
+# entropy from/to a multicast channel
+
+description "receive/transmit entropy using SSM"
+
+start on starting mountall
+respawn
+respawn limit 3 12
+
+pre-start-script
+    SSMRANDOM_MODE="none"
+    SSMRANDOM_ARGS=""
+    [ ! -f /etc/default/ssmrandom ] && { stop; exit 0; }
+
+    . /etc/default/ssmrandom
+
+    [ -z "$ENABLED" ] && { stop; exit 0; }
+end script
+
+exec ssmrandom $SSMRANDOM_ARGS

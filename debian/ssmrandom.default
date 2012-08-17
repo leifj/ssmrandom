@@ -1,0 +1,15 @@
+# Uncomment to enable ssmrandom
+#
+# ENABLED=1
+#
+# Example configuration - the SSMRANDOM_ARGS is used to start ssmrandom
+#
+# Receiver:
+#
+# SSMRANDOM_HOST="random.example.org"
+# SSMRANDOM_ARGS="recv -L info -o /var/log/ssm-rnd-pipe -F $SSMRANDOMHOST"
+#
+# Transmitter:
+# SSMRANDOM_ARGS="send -L info -r /dev/qrandom0 -t 32"
+#
+#
