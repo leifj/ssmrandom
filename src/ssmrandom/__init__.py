@@ -56,7 +56,7 @@ if not hasattr(socket, 'IP_MULTICAST_TTL'):
 if not hasattr(socket, 'IP_ADD_SOURCE_MEMBERSHIP'):
     setattr(socket, 'IP_ADD_SOURCE_MEMBERSHIP', 39)
 
-VERSION = "0.2"
+VERSION = "0.3"
 PROTOCOL_VERSION = "1.0"
 
 SSM_GROUP = '232.0.1.100'
