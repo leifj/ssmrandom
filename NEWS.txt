@@ -1,6 +1,15 @@
 News
 ====
 
+0.3
+----
+
+*Release date: Fri Aug 17 15:12:12 CEST 201*
+
+* support for redundant transmitters
+* debian packaging 
+* + lots of minor fixes and cleanups
+
 0.2
 -----
 
