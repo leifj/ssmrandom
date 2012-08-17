@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Usage: ssmrandom {recv|send|rawsend} [options]+ [host IP(only for recv)]
+Usage: ssmrandom {recv|send|rawsend} [options]+ [host IP(only for recv)]+
        Common options:
         -h  print this message
         -v  print version information
