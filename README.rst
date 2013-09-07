@@ -54,9 +54,9 @@ multicast to the mix makes it quite hard to analyze. This experiment is trying t
 investigate the properties of a system for distributing entropy in an efficient and
 way. A couple of issues that are being investigated:
 
- - how much entropy do you have to consume in order to pick a random sample from the multicast feed?
+- how much entropy do you have to consume in order to pick a random sample from the multicast feed?
 
- - how expensive would it be to validate signatures on each json mesage?
+- how expensive would it be to validate signatures on each json mesage?
 
- - how good is rngtools at picking up bad entropy?
+- how good is rngtools at picking up bad entropy?
 
