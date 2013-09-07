@@ -194,9 +194,11 @@ def _main():
 
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         for host in args:
-            imr = (socket.inet_pton(socket.AF_INET, group) +
-                   socket.inet_pton(socket.AF_INET, opts['-i']) +
-                   socket.inet_pton(socket.AF_INET, host))
+            name,aliases,addrs = socket.gethostbyaddr(host)
+            for addr in addr:
+                imr = (socket.inet_pton(socket.AF_INET, group) +
+                       socket.inet_pton(socket.AF_INET, opts['-i']) +
+                       socket.inet_pton(socket.AF_INET, addr))
 
             s.setsockopt(socket.SOL_IP, socket.IP_ADD_SOURCE_MEMBERSHIP, imr)
         s.bind((group,port))
