@@ -10,6 +10,7 @@ Usage: ssmrandom {recv|send|rawsend} [options]+ [host IP(only for recv)]+
         -f stay in the foreground (and log to stderr)
         -F do not detatch (but otherwize act as a daemon) - useful for init
         -P <pidfile>
+        -L <loglevel> set logging level (e.g. DEBUG)
 
         recv options:
         -s buffer size
