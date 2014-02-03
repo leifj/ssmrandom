@@ -10,6 +10,7 @@ Usage: ssmrandom {recv|send|rawsend} [options]+ [host IP(only for recv)]+
         -f stay in the foreground (and log to stderr)
         -F do not detatch (but otherwize act as a daemon) - useful for init
         -P <pidfile>
+        -L <loglevel> set logging level (e.g. DEBUG)
 
         recv options:
         -s buffer size
@@ -195,7 +196,7 @@ def _main():
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         for host in args:
             name,aliases,addrs = socket.gethostbyaddr(host)
-            for addr in addr:
+            for addr in addrs:
                 imr = (socket.inet_pton(socket.AF_INET, group) +
                        socket.inet_pton(socket.AF_INET, opts['-i']) +
                        socket.inet_pton(socket.AF_INET, addr))
