@@ -1,4 +1,4 @@
-ssmrandom (0.3-1ubuntu1) precise; urgency=low
+ssmrandom (0.3-1ubuntu1) trusty; urgency=low
 
   * support multiple senders on same group and port
   * cut version 0.3
