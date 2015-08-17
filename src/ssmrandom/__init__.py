@@ -168,6 +168,7 @@ def _main():
         sys.exit()
 
     opts.setdefault('-i','0.0.0.0')
+    opts.setdefault('-I','::')
     opts.setdefault('-p',SSM_PORT)
     opts.setdefault('-o',RNGD_PIPE)
     opts.setdefault('-g',SSM_GROUP)
@@ -202,7 +203,7 @@ def _main():
                            socket.inet_pton(socket.AF_INET6, addr))
                 else:
                     imr = (socket.inet_pton(socket.AF_INET, group) +
-                           socket.inet_pton(socket.AF_INET, opts['-i']) +
+                           socket.inet_pton(socket.AF_INET, opts['-I']) +
                            socket.inet_pton(socket.AF_INET, addr))
 
             s.setsockopt(socket.SOL_IP, socket.IP_ADD_SOURCE_MEMBERSHIP, imr)
