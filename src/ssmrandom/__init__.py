@@ -168,7 +168,6 @@ def _main():
         sys.exit()
 
     opts.setdefault('-i','0.0.0.0')
-    opts.setdefault('-I','::')
     opts.setdefault('-p',SSM_PORT)
     opts.setdefault('-o',RNGD_PIPE)
     opts.setdefault('-g',SSM_GROUP)
@@ -192,24 +191,21 @@ def _main():
             sys.exit(2)
 
         dst = opts['-o']
-        v6any = opts['-I']
-        if '::' == v6any:
-           v6any = ''
 
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         for host in args:
             name,aliases,addrs = socket.gethostbyaddr(host)
+            imr = None
             for addr in addrs:
                 if ':' in addr:
-                    imr = (socket.inet_pton(socket.AF_INET6, group) +
-                           socket.inet_pton(socket.AF_INET6, v6any) +
-                           socket.inet_pton(socket.AF_INET6, addr))
+                    pass
                 else:
                     imr = (socket.inet_pton(socket.AF_INET, group) +
                            socket.inet_pton(socket.AF_INET, opts['-i']) +
                            socket.inet_pton(socket.AF_INET, addr))
-
-            s.setsockopt(socket.SOL_IP, socket.IP_ADD_SOURCE_MEMBERSHIP, imr)
+            
+            if imr is not None:
+                s.setsockopt(socket.SOL_IP, socket.IP_ADD_SOURCE_MEMBERSHIP, imr)
         s.bind((group,port))
 
         if not os.path.exists(dst):
