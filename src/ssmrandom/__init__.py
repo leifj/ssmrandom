@@ -192,6 +192,9 @@ def _main():
             sys.exit(2)
 
         dst = opts['-o']
+        v6any = opts['-I']
+        if '::' == v6any:
+           v6any = ''
 
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         for host in args:
