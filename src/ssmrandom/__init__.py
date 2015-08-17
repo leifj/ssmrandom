@@ -202,11 +202,11 @@ def _main():
             for addr in addrs:
                 if ':' in addr:
                     imr = (socket.inet_pton(socket.AF_INET6, group) +
-                           socket.inet_pton(socket.AF_INET6, opts['-i']) +
+                           socket.inet_pton(socket.AF_INET6, v6any) +
                            socket.inet_pton(socket.AF_INET6, addr))
                 else:
                     imr = (socket.inet_pton(socket.AF_INET, group) +
-                           socket.inet_pton(socket.AF_INET, opts['-I']) +
+                           socket.inet_pton(socket.AF_INET, opts['-i']) +
                            socket.inet_pton(socket.AF_INET, addr))
 
             s.setsockopt(socket.SOL_IP, socket.IP_ADD_SOURCE_MEMBERSHIP, imr)
