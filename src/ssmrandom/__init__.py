@@ -202,7 +202,7 @@ def _main():
             for addr in addrs:
                 if ':' in addr:
                     imr = (socket.inet_pton(socket.AF_INET6, group) +
-                           socket.inet_pton(socket.AF_INET6, opts['-I']) +
+                           socket.inet_pton(socket.AF_INET6, v6any) +
                            socket.inet_pton(socket.AF_INET6, addr))
                 else:
                     imr = (socket.inet_pton(socket.AF_INET, group) +
