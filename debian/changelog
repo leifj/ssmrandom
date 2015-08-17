@@ -1,3 +1,9 @@
+ssmrandom (0.4-1ubuntu3) trusty; urgency=medium
+
+  * at least do not break on v6
+
+ -- Leif Johansson <leifj@sunet.se>  Mon, 17 Aug 2015 11:48:54 +0200
+
 ssmrandom (0.4-1ubuntu2) trusty; urgency=medium
 
   * fix bug
