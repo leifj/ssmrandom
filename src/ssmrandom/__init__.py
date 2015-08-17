@@ -200,7 +200,7 @@ def _main():
                     imr = (socket.inet_pton(socket.AF_INET6, group) +
                            socket.inet_pton(socket.AF_INET6, opts['-i']) +
                            socket.inet_pton(socket.AF_INET6, addr))
-                else:
+                else
                     imr = (socket.inet_pton(socket.AF_INET, group) +
                            socket.inet_pton(socket.AF_INET, opts['-i']) +
                            socket.inet_pton(socket.AF_INET, addr))
