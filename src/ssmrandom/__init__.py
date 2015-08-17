@@ -195,7 +195,7 @@ def _main():
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         for host in args:
             name,aliases,addrs = socket.gethostbyaddr(host)
-            for addr in addr:
+            for addr in addrs:
                 imr = (socket.inet_pton(socket.AF_INET, group) +
                        socket.inet_pton(socket.AF_INET, opts['-i']) +
                        socket.inet_pton(socket.AF_INET, addr))
